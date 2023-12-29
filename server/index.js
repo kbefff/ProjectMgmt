@@ -1,19 +1,24 @@
 const express = require('express'); // yarn add express
 require('dotenv').config()
-const { graphqlHTTP } = require('express-graphql')
+const colors = require('colors')
+const {graphqlHTTP} = require('express-graphql')
 // const { createHandler } = require('graphql-http/lib/use/express');
 const schema = require('./schema/schema');
+const connectDB = require('./config/db')
 const port = process.env.PORT || 8080
+
+//connect to database
+connectDB()
 
 const app = express();
 app.use(
     '/graphql',
     graphqlHTTP({
-        schema: schema,
-        graphiql: process.env.NODE_ENV === 'development',
+      schema: schema,
+      graphiql: process.env.NODE_ENV === 'development',
     }),
-);
+  );
 
-console.log(`running in ${process.env.NODE_ENV || "default"} mode`)
-app.listen(port, console.log(`Listening to http://localhost:${port}`));
+app.listen(port, console.log(`Running in ${process.env.NODE_ENV || "default"} mode
+Listening on http://localhost:${port}`));
 
