@@ -4,6 +4,7 @@ const Client = require("../models/Client.js");
 
 const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLSchema, GraphQLList, GraphQLNonNull, GraphQLEnumType } = require("graphql");
 
+//Client Type
 const ClientType = new GraphQLObjectType({
     name: "client",
     fields: () => ({
@@ -14,14 +15,6 @@ const ClientType = new GraphQLObjectType({
     })
 });
 
-// const ProjectStatus = new GraphQLEnumType({
-//     name: 'ProjectStatus',
-//     values: {
-//         NOT_STARTED: { value: 'Not Started' },
-//         IN_PROGRESS: { value: 'In Progress' },
-//         COMPLETED: { value: 'Completed' }
-//     }
-// });
 
 // Project Type
 const ProjectType = new GraphQLObjectType({
@@ -109,10 +102,12 @@ const mutation = new GraphQLObjectType({
                     type: new GraphQLEnumType({
                         name: 'ProjectStatus',
                         values: {
-                            'new': { value: 'Not Started' }
+                            'new': { value: 'Not Started' },
+                            'started': { value: 'In Progress' },
+                            'completed': { value: 'Completed' }
                         }
                     }), defaultValue: 'Not Started'
-                }, // Use the enum type directly here
+                },
                 clientId: { type: GraphQLNonNull(GraphQLString) },
             },
             resolve(parent, args) {
@@ -124,6 +119,46 @@ const mutation = new GraphQLObjectType({
                 });
 
                 return project.save();
+            }
+        },
+        deleteProject: {
+            type: ProjectType,
+            args: {
+                id: { type: GraphQLNonNull(GraphQLString) }
+            },
+            resolve(parent, args) {
+                return Project.findByIdAndDelete(args.id);
+            }
+        },
+        updateProject: {
+            type: ProjectType,
+            args: {
+                id: { type: GraphQLNonNull(GraphQLID) },
+                name: { type: GraphQLString },
+                description: { type: GraphQLString },
+                clientId: { type: GraphQLString },
+                status: {
+                    type: new GraphQLEnumType({
+                        name: 'ProjectStatusUpdate',
+                        values: {
+                            new: { value: 'Not Started' },
+                            started: { value: 'In Progress' },
+                            completed: { value: 'Completed' }
+                        }
+                    })
+                },
+            },
+            resolve(parnt, args) {
+                return Project.findByIdAndUpdate(args.id,
+                    {
+                        $set: {
+                            name: args.name,
+                            description: args.description,
+                            status: args.status,
+                            clientId: args.clientId
+                        }
+                    },
+                    { new: true });
             }
         }
     }
