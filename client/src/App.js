@@ -1,11 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Header from "./components/Header";
+import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
+
+import Home from "./pages/Home";
+import Project from "./pages/Project";
 import NotFound from "./pages/NotFound";
 
-import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
-import Home from "./pages/Home";
-
+import Header from "./components/Header";
 
 const port = 8080;
 
@@ -40,7 +41,7 @@ function App() {
           <div className="container">
            <Routes>
             <Route path="/" element={<Home />} />
-
+            <Route path="/projects/:id" element={<Project/>} />
             <Route path='*' element={<NotFound />} />
            </Routes>
           </div>
