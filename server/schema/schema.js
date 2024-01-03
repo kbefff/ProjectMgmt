@@ -90,14 +90,20 @@ const mutation = new GraphQLObjectType({
             args: {
                 id: { type: GraphQLNonNull(GraphQLID) },
             },
-            resolve(parent, args) {
-                Project.find({ clientId: args.id }).then((projects) => {
-                    projects.forEach((project) => {
-                        project.deleteOne();
-                    });
-                });
+            async resolve(parent, args) {
+                try {
+                    // Find any projects associated with the client and delete them
+                    await Project.deleteMany({ clientId: args.id });
 
-                return Client.findByIdAndDelete(args.id);
+                    // After deleting projects, delete the client
+                    const deletedClient = await Client.findByIdAndDelete(args.id);
+
+                    // Return the deleted client data
+                    return deletedClient;
+                } catch (error) {
+                    console.error("Error deleting client and projects:", error);
+                    throw error; // Handle the error or rethrow it if needed
+                }
             },
         },
         addProject: {
@@ -115,7 +121,7 @@ const mutation = new GraphQLObjectType({
                         }
                     }), defaultValue: 'Not Started'
                 },
-                clientId: { type: GraphQLNonNull(GraphQLString) },
+                clientId: { type: GraphQLNonNull(GraphQLID) },
             },
             resolve(parent, args) {
                 const project = new Project({
