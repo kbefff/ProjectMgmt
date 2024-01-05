@@ -1,3 +1,4 @@
+require('dotenv').config() // FIXME: dotenv was not working, throwing error in ui. let's see if this fixes it
 const mongoose = require('mongoose')
 
 const connectDB = async () => {
