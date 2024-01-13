@@ -6,7 +6,9 @@
     "express-graphql": "^0.12.0",
     "graphql": "^15.8.0",
     "graphql-http": "^1.22.0",
-    "mongoose": "^8.0.3"
+    "mongoose": "^8.0.3",
+    "concurrently": "^8.2.2",
+    "dotenv": "^16.3.1"
   },
   "name": "projectmgmt",
   "description": "Full-stack project management system with GraphQL, Express, MongoDB, React, and Apollo",
@@ -23,8 +25,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^8.2.2",
-    "dotenv": "^16.3.1",
     "nodemon": "^3.0.2"
   }
 }
