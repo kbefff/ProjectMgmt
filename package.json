@@ -10,12 +10,16 @@
     "concurrently": "^8.2.2",
     "dotenv": "^16.3.1"
   },
+  "engines": {
+    "node": "18.17.1",
+    "npm": "10.2.4"
+  },
   "name": "projectmgmt",
   "description": "Full-stack project management system with GraphQL, Express, MongoDB, React, and Apollo",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node server/index.js",
+    "start": "node server/app.js",
     "dev": "NODE_ENV=development concurrently \"nodemon server/index.js\" \"cd client && npm run start\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
